@@ -66,7 +66,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         boolean open = database.open();
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " open() in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " open() in " + (t2 - t1) + " ns.");
         return open;
     }
 
@@ -76,7 +76,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         database.close();
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " close() in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " close() in " + (t2 - t1) + " ns.");
     }
 
     @Override
@@ -85,7 +85,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         boolean cmt = database.commit();
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " commit() in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " commit() in " + (t2 - t1) + " ns.");
         return cmt;
     }
 
@@ -95,7 +95,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         database.compact();
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " compact() in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " compact() in " + (t2 - t1) + " ns.");
     }
 
     @Override
@@ -116,7 +116,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         boolean open = database.isOpen();
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " isOpen() in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " isOpen() in " + (t2 - t1) + " ns.");
         return open;
     }
 
@@ -149,7 +149,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         boolean result = database.isCreatedOnDisk();
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " isCreatedOnDisk() in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " isCreatedOnDisk() in " + (t2 - t1) + " ns.");
         return result;
     }
 
@@ -159,7 +159,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         long result = database.approximateSize();
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " approximateSize() in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " approximateSize() in " + (t2 - t1) + " ns.");
         return result;
     }
 
@@ -171,7 +171,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         boolean result = database.isEmpty();
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " isEmpty() in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " isEmpty() in " + (t2 - t1) + " ns.");
         return result;
     }
 
@@ -181,7 +181,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         Set<byte[]> result = database.keys();
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " keys() in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " keys() in " + (t2 - t1) + " ns.");
         return result;
     }
 
@@ -191,7 +191,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         Optional<byte[]> value = database.get(key);
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " get(key) in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " get(key) in " + (t2 - t1) + " ns.");
         return value;
     }
 
@@ -202,7 +202,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         database.put(key, value);
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " put(key,value) in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " put(key,value) in " + (t2 - t1) + " ns.");
     }
 
     @Override
@@ -211,7 +211,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         database.delete(key);
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " delete(key) in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " delete(key) in " + (t2 - t1) + " ns.");
     }
 
     @Override
@@ -220,7 +220,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         database.putBatch(keyValuePairs);
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " putBatch(" + keyValuePairs.size() + ") in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " putBatch(" + keyValuePairs.size() + ") in " + (t2 - t1) + " ns.");
     }
 
     @Override
@@ -229,7 +229,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         database.deleteBatch(keys);
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " deleteBatch(" + keys.size() + ") in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " deleteBatch(" + keys.size() + ") in " + (t2 - t1) + " ns.");
     }
 
     @Override
@@ -238,6 +238,6 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         database.drop();
         long t2 = System.nanoTime();
 
-        LOG.trace(database.toString() + " drop() in " + (t2 - t1) + " ns.");
+        LOG.debug(database.toString() + " drop() in " + (t2 - t1) + " ns.");
     }
 }

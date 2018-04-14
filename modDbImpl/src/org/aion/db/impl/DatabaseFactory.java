@@ -121,7 +121,7 @@ public abstract class DatabaseFactory {
             }
         }
 
-        if (LOG.isTraceEnabled()) {
+        if (LOG.isDebugEnabled()) {
             return new TimedDatabase(db);
         } else {
             return db;
