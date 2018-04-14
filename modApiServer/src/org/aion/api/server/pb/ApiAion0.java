@@ -82,8 +82,8 @@ public class ApiAion0 extends ApiAion implements IApiAion {
         for (Long key : keys) {
             Fltr fltr = installedFilters.get(key);
             if (fltr.isExpired()) {
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("<fltr key={} expired removed>", key);
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("<fltr key={} expired removed>", key);
                 }
                 installedFilters.remove(key);
             } else {
@@ -135,19 +135,18 @@ public class ApiAion0 extends ApiAion implements IApiAion {
         ByteArrayWrapper txHashW = ByteArrayWrapper.wrap(
                 ((AionTxReceipt) _txRcpt).getTransaction().getHash());
 
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("ApiAionA0.onPendingTransactionUpdate - txHash: [{}], state: [{}]", txHashW.toString(), _state.getValue());
+        if (LOG.isTraceEnabled()) {
+            LOG.trace("ApiAionA0.onPendingTransactionUpdate - txHash: [{}], state: [{}]", txHashW.toString(), _state.getValue());
         }
 
         if (getMsgIdMapping().get(txHashW) != null) {
             if (pendingStatus.remainingCapacity() == 0) {
                 pendingStatus.poll();
-                LOG.warn(
-                        "ApiAionA0.onPendingTransactionUpdate - txPend ingStatus queue full, drop the first message.");
+                LOG.warn("ApiAionA0.onPendingTransactionUpdate - txPend ingStatus queue full, drop the first message.");
             }
 
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("ApiAionA0.onPendingTransactionUpdate - the pending Tx state : [{}]", _state.getValue());
+            if (LOG.isTraceEnabled()) {
+                LOG.trace("ApiAionA0.onPendingTransactionUpdate - the pending Tx state : [{}]", _state.getValue());
             }
 
             pendingStatus.add(new TxPendingStatus(txHashW, getMsgIdMapping().get(txHashW).getValue(),
@@ -163,8 +162,8 @@ public class ApiAion0 extends ApiAion implements IApiAion {
         } else {
             if (txWait.remainingCapacity() == 0) {
                 txWait.poll();
-                if (LOG.isDebugEnabled()) {
-                    LOG.debug("ApiAionA0.onPendingTransactionUpdate - txWait queue full, drop the first message.");
+                if (LOG.isTraceEnabled()) {
+                    LOG.trace("ApiAionA0.onPendingTransactionUpdate - txWait queue full, drop the first message.");
                 }
             }
 
