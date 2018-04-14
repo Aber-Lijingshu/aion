@@ -81,24 +81,33 @@ public abstract class DatabaseFactory {
     public static IByteArrayKeyValueDatabase connect(Properties info) {
 
         DBVendor dbType = DBVendor.fromString(info.getProperty(Props.DB_TYPE));
+        IByteArrayKeyValueDatabase db;
 
         if (dbType == DBVendor.UNKNOWN) {
             // the driver, if correct should check path and name
-            return connect(info.getProperty(Props.DB_TYPE), info);
-        }
-
-        boolean enableLocking = getBoolean(info, Props.ENABLE_LOCKING);
-
-        // first check for locking
-        if (enableLocking) {
-            return connectWithLocks(info);
-        }
-
-        // next check for heap cache
-        if (getBoolean(info, Props.ENABLE_HEAP_CACHE)) {
-            return connectWithCache(info);
+            db = connect(info.getProperty(Props.DB_TYPE), info);
         } else {
-            return connectBasic(info);
+
+            boolean enableLocking = getBoolean(info, Props.ENABLE_LOCKING);
+
+            // first check for locking
+            if (enableLocking) {
+                db = connectWithLocks(info);
+            } else {
+                // next check for heap cache
+                if (getBoolean(info, Props.ENABLE_HEAP_CACHE)) {
+                    db = connectWithCache(info);
+                } else {
+                    db = connectBasic(info);
+                }
+            }
+        }
+
+        // time operations during debug
+        if (LOG.isDebugEnabled()) {
+            return new TimedDatabase(db);
+        } else {
+            return db;
         }
     }
 
@@ -109,22 +118,15 @@ public abstract class DatabaseFactory {
      */
     private static IByteArrayKeyValueDatabase connectWithLocks(Properties info) {
         boolean enableHeapCache = getBoolean(info, Props.ENABLE_HEAP_CACHE);
-        IByteArrayKeyValueDatabase db;
         if (enableHeapCache) {
-            db = new LockedDatabase(connectWithCache(info));
+            return new LockedDatabase(connectWithCache(info));
         } else {
             DBVendor vendor = DBVendor.fromString(info.getProperty(Props.DB_TYPE));
             if (vendor == DBVendor.LEVELDB || vendor == DBVendor.ROCKSDB) {
-                db = new SpecialLockedDatabase(connectBasic(info));
+                return new SpecialLockedDatabase(connectBasic(info));
             } else {
-                db = new LockedDatabase(connectBasic(info));
+                return new LockedDatabase(connectBasic(info));
             }
-        }
-
-        if (LOG.isDebugEnabled()) {
-            return new TimedDatabase(db);
-        } else {
-            return db;
         }
     }
 
