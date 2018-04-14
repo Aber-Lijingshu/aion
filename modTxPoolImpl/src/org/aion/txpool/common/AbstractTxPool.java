@@ -19,7 +19,7 @@
  *
  * Contributors:
  *     Aion foundation.
- *     
+ *
  ******************************************************************************/
 
 package org.aion.txpool.common;
@@ -47,17 +47,16 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
     protected static final Logger LOG = AionLoggerFactory.getLogger(LogEnum.TXPOOL.toString());
 
     protected int seqTxCountMax = 16;
-    protected int txn_timeout = 86_400; // 1 day by second
-    protected int blkSizeLimit = 16_000_000; // 16MB
+    protected int txn_timeout = 86_400; // 1 day by seconds
+    protected int blkSizeLimit = Constant.MAX_BLK_SIZE; // 2MB
 
     protected final AtomicLong blkNrgLimit = new AtomicLong(10_000_000L);
     protected final int multiplyM = 1_000_000;
     protected final int TXN_TIMEOUT_MIN = 10; // 10s
     protected final int TXN_TIMEOUT_MAX = 86_400; // 1 day
 
-    protected final int BLK_SIZE_MAX = Constant.MAX_BLK_SIZE; // 16MB
-
-    protected final int BLK_SIZE_MIN = 1_000_000; // 1MB
+    protected final int BLK_SIZE_MAX = 16 * 1024 * 1024; // 16MB
+    protected final int BLK_SIZE_MIN = 1024 * 1024; // 1MB
 
     protected final int BLK_NRG_MAX = 100_000_000;
     protected final int BLK_NRG_MIN = 1_000_000;
@@ -85,7 +84,7 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
      *
      * @BigInteger energy cost = energy consumption * energy price
      * @LinkedHashSet<TxPoolList<ByteArrayWrapper>> the TxPoolList of the first
-     *                                              transaction hash
+     * transaction hash
      */
     private final SortedMap<BigInteger, Map<ByteArrayWrapper, TxDependList<ByteArrayWrapper>>> feeView = Collections
             .synchronizedSortedMap(new TreeMap<>(Collections.reverseOrder()));
@@ -379,8 +378,9 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
                                                 "AbstractTxPool.updateAccPoolState case1 - nonce:[{}] totalFee:[{}] cnt:[{}]",
                                                 txNonceStart, totalFee.toString(), cnt);
                                     }
-                                    newPoolState.add(
-                                            new PoolState(txNonceStart, totalFee.divide(BigInteger.valueOf(cnt)), cnt));
+                                    newPoolState
+                                            .add(new PoolState(txNonceStart, totalFee.divide(BigInteger.valueOf(cnt)),
+                                                    cnt));
 
                                     txNonceStart = en.getKey().add(BigInteger.ONE);
                                     totalFee = BigInteger.ZERO;
@@ -393,8 +393,8 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
                                             "AbstractTxPool.updateAccPoolState case2 - nonce:[{}] totalFee:[{}] cnt:[{}]",
                                             txNonceStart, totalFee.toString(), cnt);
                                 }
-                                newPoolState.add(
-                                        new PoolState(txNonceStart, totalFee.divide(BigInteger.valueOf(cnt)), cnt));
+                                newPoolState.add(new PoolState(txNonceStart, totalFee.divide(BigInteger.valueOf(cnt)),
+                                        cnt));
 
                                 // next PoolState
                                 txNonceStart = en.getKey();
@@ -444,8 +444,8 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
             throw new NullPointerException();
         }
 
-        for (BigInteger bi = ps.getFirstNonce(); bi
-                .compareTo(ps.firstNonce.add(BigInteger.valueOf(ps.getCombo()))) < 0; bi = bi.add(BigInteger.ONE)) {
+        for (BigInteger bi = ps.getFirstNonce();
+             bi.compareTo(ps.firstNonce.add(BigInteger.valueOf(ps.getCombo()))) < 0; bi = bi.add(BigInteger.ONE)) {
             if (!as.getMap().containsKey(bi)) {
                 return false;
             }
@@ -473,8 +473,8 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
 
                     TxDependList<ByteArrayWrapper> txl = new TxDependList<>();
                     BigInteger timestamp = BigInteger.ZERO;
-                    for (BigInteger i = ps.firstNonce; i.compareTo(
-                            ps.firstNonce.add(BigInteger.valueOf(ps.combo))) < 0; i = i.add(BigInteger.ONE)) {
+                    for (BigInteger i = ps.firstNonce;
+                         i.compareTo(ps.firstNonce.add(BigInteger.valueOf(ps.combo))) < 0; i = i.add(BigInteger.ONE)) {
 
                         ByteArrayWrapper bw = this.accountView.get(e.getKey()).getMap().get(i).getKey();
                         if (i.equals(ps.firstNonce)) {
